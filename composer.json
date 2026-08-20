@@ -1,0 +1,13 @@
+{
+    "name": "andres/laboratorio4-php",
+    "description": "Laboratorio 4 - Pruebas y Cobertura con PHPUnit",
+    "type": "project",
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    }
+}

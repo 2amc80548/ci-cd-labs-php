@@ -1,0 +1,47 @@
+  name: PHP CI with PHPUnit
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Descargar el código fuente del repositorio
+    - uses: actions/checkout@v4
+
+    # 2. Configurar PHP y habilitar PCOV (el motor de cobertura de PHP)
+    - name: Set up PHP 8.3 with PCOV
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: pcov
+        coverage: pcov
+        tools: composer
+        cache: composer
+
+    # 3. Instalar las dependencias de Composer (Equivalente al Build de Maven)
+    - name: Install dependencies with Composer
+      run: composer install --no-progress --prefer-dist
+
+    # 4. Ejecutar las pruebas unitarias (Equivalente a Run tests with Maven)
+    - name: Run tests with PHPUnit
+      run: ./vendor/bin/phpunit --no-coverage
+
+    # 5. Generar reporte de Cobertura (Equivalente a JaCoCo:report en Java)
+    - name: Run Code Coverage with PHPUnit
+      run: ./vendor/bin/phpunit --coverage-html target/site/pcov
+
+    # 6. Guardar los reportes en GitHub Actions para poder descargarlos (Artefactos)
+    - name: Upload Code Coverage Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-report
+        path: target/site/pcov/
